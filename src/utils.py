@@ -21,7 +21,6 @@ from typing import List, Optional, Coroutine, Union, get_type_hints
 from enum import Enum
 
 import os
-import yaml
 
 import inspect
 import ast

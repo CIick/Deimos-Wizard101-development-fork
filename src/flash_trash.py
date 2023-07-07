@@ -1,5 +1,8 @@
 import asyncio
 import re
+
+import loguru
+from wizwalker import ClientHandler
 from wizwalker.memory.memory_reader import MemoryReadError
 from wizwalker.extensions.scripting.utils import _maybe_get_named_window
 from src.utils import *
@@ -279,20 +282,23 @@ class FlashTrash:
                 await self.client.mouse_handler.click_window_with_name('Close_Button')
 
     async def goto_bazzar_and_open_sell_tab(self) -> None:
-        await self.client.send_key(Keycode.PAGE_DOWN)
+        await asyncio.sleep(1)
+        await self.client.send_key(Keycode.PAGE_DOWN, .2)
+        await asyncio.sleep(1)
         await navigate_to_ravenwood(self.client)
         await navigate_to_commons_from_ravenwood(self.client)
         await navigate_to_shopping_district(self.client)
         await navigate_to_olde_town(self.client)
         await navigate_to_bazzar(self.client)
-        await self.client.send_key(Keycode.PAGE_DOWN)
 
     async def navigate_to_sell_tab(self) -> None:
-        await asyncio.sleep(1)
+        # Long sleep incase user is running Deimos on a Walmart point of sale system
+        logger.debug(f"Client {self.client.title} - is waiting for 10 seconds incase the users computer is a potato")
+        await asyncio.sleep(10)
         async with self.client.mouse_handler:
             await self.client.mouse_handler.click_window_with_name('sellTab')
 
-    async def read_each_shop_item(self, tab):
+    async def read_each_shop_item(self, tab) -> None:
         tab_window = await _maybe_get_named_window(self.client.root_window, tab)
         if await tab_window.read_value_from_offset(688, 'bool') is True:
             return
@@ -350,26 +356,22 @@ class FlashTrash:
             else:
                 pass
 
-    async def select_tab_and_call_read_function(self):
+    async def select_tab_and_call_read_function(self) ->None:
         for tab in self.equippble_tab:
             await self.read_each_shop_item(tab)
 
-    async def select_houseing_tab_and_call_read_function(self):
+    async def select_housing_tab_and_call_read_function(self) ->None:
         async with self.client.mouse_handler:
             await self.client.mouse_handler.click_window_with_name('NextCategory_BackpackStuff')
         # Go to housing items tab and sell there.
         for tab in self.housing_tab:
             await self.read_each_shop_item(tab)
 
-
-
-
-
-
-
-
-
-
-
-
-        
+    async def et_phone_home(self) -> None:
+        # Returns client to previously set TP location
+        current_zone = await self.client.zone_name()
+        await asyncio.sleep(1)
+        await self.client.send_key(Keycode.PAGE_UP, .2)
+        await asyncio.sleep(1)
+        await wait_for_zone_change(self.client, current_zone=current_zone)
+        await asyncio.sleep(1.5)

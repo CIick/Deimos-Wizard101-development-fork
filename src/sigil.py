@@ -129,7 +129,8 @@ class Sigil():
 							await flash_trash.goto_bazzar_and_open_sell_tab()
 							await flash_trash.navigate_to_sell_tab()
 							await flash_trash.select_tab_and_call_read_function()
-							await flash_trash.select_houseing_tab_and_call_read_function()
+							await flash_trash.select_housing_tab_and_call_read_function()
+							await flash_trash.et_phone_home()
 						else:
 							logger.debug(f'Client {self.client.title} - Is not close to Max Inventory Space, the farming continues')
 					else:
@@ -252,7 +253,7 @@ class Sigil():
 								await flash_trash.goto_bazzar_and_open_sell_tab()
 								await flash_trash.navigate_to_sell_tab()
 								await flash_trash.select_tab_and_call_read_function()
-								await flash_trash.select_houseing_tab_and_call_read_function()
+								await flash_trash.select_housing_tab_and_call_read_function()
 							else:
 								logger.debug(f'Client {client.title} - Is not close to Max Inventory Space, the farming continues')
 						else:
