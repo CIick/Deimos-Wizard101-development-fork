@@ -293,6 +293,8 @@ class FlashTrash:
 
     async def navigate_to_sell_tab(self) -> None:
         # Long sleep incase user is running Deimos on a Walmart point of sale system
+        await asyncio.sleep(1)
+        await self.client.send_key(Keycode.X, .2)
         logger.debug(f"Client {self.client.title} - is waiting for 10 seconds incase the users computer is a potato")
         await asyncio.sleep(10)
         async with self.client.mouse_handler:

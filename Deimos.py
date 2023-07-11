@@ -1183,14 +1183,11 @@ async def main():
 					await asyncio.sleep(350)
 					client_xyz_2 = await client.body.position()
 					distance_moved = calc_Distance(client_xyz, client_xyz_2)
-					if distance_moved < 5.0 and not await client.in_battle() and not client.feeding_pet_status and not client.entity_detect_combat_status:
-						if await is_visible_by_path(client, team_up_button_path) is True:
-							logger.debug(f"Client {client.title} - AFK client detected, but client is near sigil. Could be farming so we don't run ANTI-AFK")
-						else:
-							logger.debug(f"Client {client.title} - AFK client detected, moving slightly.")
-							await client.send_key(key=Keycode.A)
-							await asyncio.sleep(0.1)
-							await client.send_key(key=Keycode.D)
+					if distance_moved < 5.0 and not await client.in_battle() and not client.feeding_pet_status and not client.entity_detect_combat_status and not client.sigil_status:
+						logger.debug(f"Client {client.title} - AFK client detected, moving slightly.")
+						await client.send_key(key=Keycode.A)
+						await asyncio.sleep(0.1)
+						await client.send_key(key=Keycode.D)
 
 		await asyncio.gather(*[async_anti_afk(p) for p in walker.clients])
 
